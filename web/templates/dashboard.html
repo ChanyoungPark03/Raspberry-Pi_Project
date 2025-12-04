@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>스마트 화분 모니터링</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; }
+    .container { width:95%; margin:auto; padding:20px; }
+
+    .box {
+      background:#fff;
+      padding:16px;
+      margin-bottom:15px;
+      border-radius:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .title-bar {
+      background:#5a0ef8;
+      color:#fff;
+      padding:8px 12px;
+      border-radius:6px;
+      font-size:18px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .status-text {
+      font-size:20px;
+      font-weight:bold;
+      line-height:1.8;
+    }
+
+    .row { display:flex; gap:15px; }
+    .left { flex:2; }
+    .right { flex:1; display:flex; flex-direction:column; gap:15px; }
+
+    #log-box {
+      height:300px;
+      overflow-y:auto;
+      background:#fafafa;
+      border:1px solid #ddd;
+      border-radius:8px;
+      padding:10px;
+      font-size:16px;
+      line-height:1.7;
+      white-space:pre-line;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 1️⃣ 현재 상태 -->
+  <div class="box">
+    <div class="title-bar">📊 현재 상태</div>
+    <p class="status-text">
+      🌡 온도: <span id="temp">--</span> ℃ |
+      💧 습도: <span id="hum">--</span> % |
+      🌱 수분: <span id="moisture">--</span> %<br>
+      🧪 토양 상태: <span id="soil_status">--</span>
+    </p>
+  </div>
+
+  <!-- 2️⃣ 아래 레이아웃: 왼쪽 그래프 / 오른쪽 센서 설명 + 로그 -->
+  <div class="row">
+
+    <!-- 왼쪽: 수분 그래프 -->
+    <div class="box left">
+      <div class="title-bar">📈 수분 변화 그래프 (%)</div>
+      <canvas id="moistureChart"></canvas>
+    </div>
+
+    <!-- 오른쪽: 센서 설명 + 로그 -->
+    <div class="right">
+
+      <div class="box">
+        <div class="title-bar">📘 센서 설명</div>
+        <ul style="font-size:18px; font-weight:600; line-height:1.6;">
+          <li>DHT22 → 온도/습도 측정</li>
+          <li>토양 수분 센서 → 물에 담기면 수분 ↑, 마르면 수분 ↓</li>
+          <li>그래프 → 시간에 따라 수분 변화를 시각화</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <div class="title-bar">🗂 Log 기록</div>
+        <div id="log-box"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+let moistureChart = null;
+
+// 그래프 초기화
+function initChart() {
+  const ctx = document.getElementById("moistureChart").getContext("2d");
+  moistureChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [{
+        label: "수분량 (%)",
+        data: [],
+        borderWidth: 3,
+        tension: 0.3
+      }]
+    },
+    options: {
+      scales: {
+        y: { min: 0, max: 100 }
+      }
+    }
+  });
+}
+
+// 서버에서 상태 가져오기
+function updateUI() {
+  fetch("/api/status")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("temp").innerText = data.temperature;
+      document.getElementById("hum").innerText = data.humidity;
+      document.getElementById("moisture").innerText = data.moisture;
+      document.getElementById("soil_status").innerText = data.soil_status;
+
+      // 로그
+      document.getElementById("log-box").innerText = data.logs.join("\n");
+
+      // 그래프 업데이트
+      const label = new Date().toLocaleTimeString();
+      moistureChart.data.labels.push(label);
+      moistureChart.data.datasets[0].data.push(data.moisture);
+
+      if (moistureChart.data.labels.length > 30) {
+        moistureChart.data.labels.shift();
+        moistureChart.data.datasets[0].data.shift();
+      }
+      moistureChart.update();
+    });
+}
+
+initChart();
+updateUI();
+setInterval(updateUI, 2000);  // 2초마다 센서값 갱신
+</script>
+</body>
+</html>
+

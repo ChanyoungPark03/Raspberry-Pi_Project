@@ -1,0 +1,160 @@
+body {
+    font-family: "맑은 고딕", Arial, sans-serif;
+    background-color: #f3f4f8;
+    margin: 0;
+    padding: 0 0 40px 0;
+}
+
+/* 상단 바 */
+.top-bar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-box {
+    font-size: 14px;
+}
+
+.status-box .label {
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.status-box .value {
+    font-weight: bold;
+}
+
+.status-on {
+    color: #e53935;
+}
+
+.status-off {
+    color: #333;
+}
+
+.status-box .sub {
+    font-size: 11px;
+    color: #777;
+    margin-left: 6px;
+}
+
+/* 메인 레이아웃 */
+.main-container {
+    max-width: 1200px;
+    margin: 25px auto 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1.2fr;
+    grid-gap: 20px;
+}
+
+/* 카드 공통 */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #673ab7;
+    color: #ffffff;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.card-body {
+    padding: 15px 20px;
+}
+
+/* 1번 화분 카드 */
+.pot-card .motor-state {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.motor-on {
+    color: #e53935;
+    font-weight: bold;
+}
+
+.motor-off {
+    color: #555;
+    font-weight: bold;
+}
+
+.sensor-summary p {
+    margin: 4px 0;
+}
+
+/* 수분 프로그레스 바 */
+.moisture-section {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.moisture-title {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 16px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #7b1fa2, #3949ab);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.moisture-percent {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #555;
+}
+
+/* 버튼 */
+.pump-form {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    padding: 8px 18px;
+    margin-right: 8px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.btn.on {
+    background-color: #388e3c;
+}
+
+.btn.off {
+    background-color: #e53935;
+}
+
+/* 그래프 */
+.chart-wrapper {
+    margin-top: 15px;
+}
+
+/* 오른쪽 패널 */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap:
+

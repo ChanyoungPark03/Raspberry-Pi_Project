@@ -1,0 +1,5 @@
+Flask
+RPi.GPIO
+smbus2
+Adafruit_DHT
+
